@@ -21,6 +21,10 @@ export enum InvalidConsumptionClassEnum {
   "publicPower" = "poderPublico",
 }
 
+export type ConsumptionClassEnum =
+  | ValidConsumptionClassEnum
+  | InvalidConsumptionClassEnum;
+
 export enum ValidTariffModalityEnum {
   "white" = "branca",
   "conventional" = "convencional",
@@ -30,6 +34,10 @@ export enum InvalidTariffModalityEnum {
   "blue" = "azul",
   "green" = "verde",
 }
+
+export type TariffModalityEnum =
+  | ValidTariffModalityEnum
+  | InvalidTariffModalityEnum;
 
 export enum ConnectionTypeEnum {
   "singlePhase" = "monofasico",
@@ -42,14 +50,6 @@ export enum MinConsumptionByConnectionTypeEnum {
   "twoPhase" = 500,
   "threePhase" = 750,
 }
-
-export type ConsumptionClassEnum =
-  | ValidConsumptionClassEnum
-  | InvalidConsumptionClassEnum;
-
-export type TariffModalityEnum =
-  | ValidTariffModalityEnum
-  | InvalidConsumptionClassEnum;
 
 export type ClientType = {
   documentNumber: IdentifierType;
