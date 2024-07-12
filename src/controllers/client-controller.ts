@@ -4,7 +4,7 @@ import { ClientPresenter } from "../presenters/client-presenter";
 
 const clientService = new ClientService();
 
-export const checkEligibilityClient = (req: Request, res: Response) => {
+export const checkEligibility = (req: Request, res: Response) => {
   const {
     classe_consumo: consumptionClass,
     modalidade_tarifaria: tariffModality,

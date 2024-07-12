@@ -1,7 +1,6 @@
 import {
-  ClientTypeInput,
-  InvalidCheckEligibilityOutput,
-  ValidCheckEligibilityOutput,
+  CheckEligibilityInput,
+  CheckEligibilityOutput
 } from "../dto/client.dto";
 import { EligibilityError } from "../middlewares/errorHandler";
 import {
@@ -13,14 +12,14 @@ import {
 
 export class ClientService {
   checkEligibility(
-    clientType: ClientTypeInput
-  ): InvalidCheckEligibilityOutput | ValidCheckEligibilityOutput {
+    checkEligibilityInput: CheckEligibilityInput
+  ): CheckEligibilityOutput {
     const {
       consumptionClass,
       tariffModality,
       connectionType,
       consumptionHistory,
-    } = clientType;
+    } = checkEligibilityInput;
 
     const validConsumptionClass: string[] = Object.values(
       ValidConsumptionClassEnum
