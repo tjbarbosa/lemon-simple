@@ -51,7 +51,7 @@ export enum MinConsumptionByConnectionTypeEnum {
   "threePhase" = 750,
 }
 
-export type ClientType = {
+export type CheckEligibilityType = {
   documentNumber: IdentifierType;
   consumptionClass: ConsumptionClassEnum;
   tariffModality: TariffModalityEnum;

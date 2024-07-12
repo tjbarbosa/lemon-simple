@@ -6,7 +6,7 @@ import clientSchema from '../validators/client-schema';
 const ajv = new Ajv();
 addFormats(ajv);
 
-export const validateClient = (req: Request, res: Response, next: NextFunction) => {
+export const validateInput = (req: Request, res: Response, next: NextFunction) => {
   const validate = ajv.compile(clientSchema);
   const valid = validate(req.body);
 

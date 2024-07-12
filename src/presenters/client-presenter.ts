@@ -1,11 +1,21 @@
-import { InvalidCheckEligibilityOutput, ValidCheckEligibilityOutput, CheckEligibilityClientOutput } from "../dto/client.dto";
+import {
+  CheckClientEligibilityTranslatedOutput,
+  CheckEligibilityOutput
+} from "../dto/client.dto";
 
 export class ClientPresenter {
-  static bindToPortuguese(data: InvalidCheckEligibilityOutput | ValidCheckEligibilityOutput): CheckEligibilityClientOutput {
+  static bindToPortuguese(
+    checkEligibilityOutput: CheckEligibilityOutput
+  ): CheckClientEligibilityTranslatedOutput {
+    if ("reason" in checkEligibilityOutput) {
+      return {
+        elegivel: checkEligibilityOutput.eligible,
+        razao: checkEligibilityOutput.reason,
+      };
+    }
     return {
-      elegivel: data.eligible,
-      razao: '', // data?.reason || '',
-      economia_anual_co2: 1234, // data?.annualCO2Savings,
+      elegivel: checkEligibilityOutput.eligible,
+      economia_anual_co2: checkEligibilityOutput.annualCO2Savings,
     };
   }
 }

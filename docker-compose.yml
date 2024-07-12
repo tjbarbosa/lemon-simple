@@ -1,0 +1,21 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.local
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: development
+    volumes:
+      - .:/usr/src/app
+
+  test:
+    build: .
+    command: npm run test
+    volumes:
+      - .:/src
+    environment:
+      PORT: 3001

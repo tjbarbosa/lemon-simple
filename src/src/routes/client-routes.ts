@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import { validateClient } from '../../middlewares/validator';
-import { checkEligibilityClient } from '../../controllers/client-controller';
+import { validateInput } from '../../middlewares/validator';
+import { checkEligibility } from '../../controllers/client-controller';
 
 const router = Router();
 
-router.post('/validaCliente/', validateClient, checkEligibilityClient);
+router.post('/verificar-elegibilidade/', validateInput, checkEligibility);
 
 export default router;

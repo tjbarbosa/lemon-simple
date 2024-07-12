@@ -1,0 +1,178 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "API de Verificação de Elegibilidade de Clientes",
+    "description": "API para verificar a elegibilidade de clientes com base em critérios específicos.",
+    "contact": {
+      "name": "a equipe",
+      "email": "tjbarbosa.sr@gmail.com"
+    },
+    "version": "0.0.1"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Clientes",
+      "description": "Clientes para elegibilidade",
+      "externalDocs": {
+        "description": "Veja mais detalhes",
+        "url": "https://lemonenergy.notion.site/Teste-Backend-Lemon-Elegibilidade-9958a9678c0d4ac99185850fdb9716fc"
+      }
+    }
+  ],
+  "paths": {
+    "/clientes/verificar-elegibilidade": {
+      "post": {
+        "tags": [
+          "Clientes"
+        ],
+        "summary": "Valida a eligibilidade de um novo cliente",
+        "description": "Nem todos os clientes que desejam fazer parte da Lemon podem ser aceitos no momento. Seja por razões regulatórias ou porque não vale a pena para o cliente ou para a Lemon ter essa empresa como cliente. No processo de aquisição de clientes, fazemos a checagem de elegibilidade da mesma, através dos dados contidos na conta de luz do cliente. Caso a empresa não seja elegível, precisamos explicitar os motivos para tal. Caso ela seja elegível, precisamos calcular também a projeção da quantidade de CO2 que ela deixaria de emitir caso usasse energia limpa.",
+        "operationId": "verificar-elegibilidade",
+        "requestBody": {
+          "description": "Valida a eligibilidade de um novo cliente",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Elegibilidade"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultadoElegibilidade"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "422": {
+            "description": "Validation exception"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Elegibilidade": {
+        "type": "object",
+        "properties": {
+          "numero_documento": {
+            "type": "string",
+            "example": 78324267050
+          },
+          "tipo_conexao": {
+            "type": "string",
+            "enum": [
+              "monofasico",
+              "bifasico",
+              "trifasico"
+            ],
+            "example": "bifasico"
+          },
+          "classe_consumo": {
+            "type": "string",
+            "enum": [
+              "residencial",
+              "industrial",
+              "comercial",
+              "rural",
+              "poderPublico"
+            ],
+            "example": "comercial"
+          },
+          "modalidade_tarifaria": {
+            "type": "string",
+            "enum": [
+              "azul",
+              "branca",
+              "verde",
+              "convencional"
+            ],
+            "example": "convencional"
+          },
+          "historico_consumo": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 3,
+            "maxItems": 12,
+            "minimum": 1,
+            "maximum": 9999,
+            "example": [
+              3878,
+              9760,
+              5976
+            ]
+          }
+        }
+      },
+      "ResultadoElegibilidade": {
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "elegivel": {
+                "type": "string",
+                "enum": [
+                  "true"
+                ]
+              },
+              "economia_anual_CO2": {
+                "type": "number",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "elegivel",
+              "economia_anual_CO2"
+            ]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "elegivel": {
+                "type": "string",
+                "enum": [
+                  "false"
+                ]
+              },
+              "razoes_inelegibilidade": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "Classe de consumo não aceita",
+                    "Modalidade tarifária não aceita",
+                    "Consumo muito baixo para tipo de conexão"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "elegivel",
+              "razoes_inelegibilidade"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}
