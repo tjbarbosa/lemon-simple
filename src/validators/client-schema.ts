@@ -11,20 +11,20 @@ const cnpj = {
 const clientSchema = {
   type: "object",
   properties: {
-    numero_documento: { oneOf: [cpf, cnpj] },
-    classe_consumo: {
+    numeroDoDocumento: { oneOf: [cpf, cnpj] },
+    classeDeConsumo: {
       type: "string",
       enum: ["residencial", "industrial", "comercial", "rural", "poderPublico"],
     },
-    modalidade_tarifaria: {
+    modalidadeTarifaria: {
       type: "string",
       enum: ["azul", "branca", "verde", "convencional"],
     },
-    tipo_conexao: {
+    tipoDeConexao: {
       type: "string",
       enum: ["monofasico", "bifasico", "trifasico"],
     },
-    historico_consumo: {
+    historicoDeConsumo: {
       type: "array",
       items: {
         type: "integer",
@@ -36,11 +36,11 @@ const clientSchema = {
     },
   },
   required: [
-    "numero_documento",
-    "classe_consumo",
-    "modalidade_tarifaria",
-    "tipo_conexao",
-    "historico_consumo",
+    "numeroDoDocumento",
+    "classeDeConsumo",
+    "modalidadeTarifaria",
+    "tipoDeConexao",
+    "historicoDeConsumo",
   ],
   additionalProperties: false,
 };

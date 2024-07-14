@@ -10,7 +10,7 @@ export type CheckEligibilityInput = Pick<
 
 export type IneligibleClientOutput = {
   eligible: boolean;
-  reason: string;
+  reasons: string[];
 };
 
 export type EligibleClientOutput = {
@@ -24,12 +24,12 @@ export type CheckEligibilityOutput =
 
 export type IneligibleClientTranslatedOutput = {
   elegivel: boolean;
-  razao: string;
+  razoesDeInelegibilidade: string[];
 };
 
 export type EligibleClientTranslatedOutput = {
   elegivel: boolean;
-  economia_anual_co2: number;
+  economiaAnualDeCO2: number;
 };
 
 export type CheckClientEligibilityTranslatedOutput =

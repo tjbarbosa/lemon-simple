@@ -7,15 +7,15 @@ export class ClientPresenter {
   static bindToPortuguese(
     checkEligibilityOutput: CheckEligibilityOutput
   ): CheckClientEligibilityTranslatedOutput {
-    if ("reason" in checkEligibilityOutput) {
+    if ("reasons" in checkEligibilityOutput) {
       return {
         elegivel: checkEligibilityOutput.eligible,
-        razao: checkEligibilityOutput.reason,
+        razoesDeInelegibilidade: checkEligibilityOutput.reasons,
       };
     }
     return {
       elegivel: checkEligibilityOutput.eligible,
-      economia_anual_co2: checkEligibilityOutput.annualCO2Savings,
+      economiaAnualDeCO2: checkEligibilityOutput.annualCO2Savings,
     };
   }
 }

@@ -21,14 +21,16 @@ export class ClientService {
       consumptionHistory,
     } = checkEligibilityInput;
 
+    const reasons = []
+
     const validConsumptionClass: string[] = Object.values(
       ValidConsumptionClassEnum
     );
     if (!validConsumptionClass.includes(consumptionClass.toLowerCase())) {
-      EligibilityError;
+      reasons.push(EligibilityError.INELIGIBLE_CONSUMPTION_CLASS.toString());
       return {
         eligible: false,
-        reason: EligibilityError.INELIGIBLE_CONSUMPTION_CLASS,
+        reasons,
       };
     }
 
@@ -36,18 +38,20 @@ export class ClientService {
       ValidTariffModalityEnum
     );
     if (!validTariffModality.includes(tariffModality.toLowerCase())) {
+      reasons.push(EligibilityError.INELIGIBLE_TARIFF_MODALITY.toString());
       return {
         eligible: false,
-        reason: EligibilityError.INELIGIBLE_TARIFF_MODALITY,
+        reasons,
       };
     }
 
     const baseNumberOfMonths = 12;
 
     if (consumptionHistory?.length < baseNumberOfMonths) {
+      reasons.push(EligibilityError.INSUFFICIENT_CONSUMPTION_HISTORY.toString());
       return {
         eligible: false,
-        reason: EligibilityError.INSUFFICIENT_CONSUMPTION_HISTORY,
+        reasons,
       };
     }
 
@@ -65,9 +69,10 @@ export class ClientService {
       (connectionType.toLowerCase() === ConnectionTypeEnum.threePhase &&
         averageConsumption < MinConsumptionByConnectionTypeEnum.threePhase)
     ) {
+      reasons.push(EligibilityError.LOW_AVERAGE_CONSUMPTION.toString());
       return {
         eligible: false,
-        reason: EligibilityError.LOW_AVERAGE_CONSUMPTION,
+        reasons,
       };
     }
 
