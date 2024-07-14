@@ -160,7 +160,7 @@
                       "classeDeConsumo": "comercial",
                       "modalidadeTarifaria": "convencional",
                       "historicoDeConsumo": [
-                        0,
+                        -1,
                         10000
                       ]
                     },
@@ -293,7 +293,8 @@
               "type": "number"
             },
             "minItems": 3,
-            "minimum": 1,
+            "maxItems": 12,
+            "minimum": 0,
             "maximum": 9999,
             "example": [
               3878,
