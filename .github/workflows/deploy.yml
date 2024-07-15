@@ -8,9 +8,8 @@ on:
     types: [opened, reopened, synchronize, edited]
 
 jobs:
-  setup:
+  setup-and-test:
     runs-on: ubuntu-latest
-    container: my-image-name:latest
 
     steps:
     - name: Checkout repository
@@ -28,27 +27,7 @@ jobs:
       with:
         node-version: 20
     - run: npm ci
+    - run: npm run test
 
-  test:
-    runs-on: ubuntu-latest
-    container:
-      image: my-image-name:latest
-      volumes:
-        - /path/to/setup/dir:/path/to/test/dir
-
-    needs:
-      - setup
-
-    steps:
-    - name: Tests
-      run: npm run test
-
-  compose-down:
-    runs-on: ubuntu-latest
-    needs:
-      - setup
-      - test
-
-    steps:
     - name: Docker compose down
       run: docker-compose down --volumes
