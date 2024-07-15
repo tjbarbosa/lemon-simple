@@ -1,14 +1,11 @@
 name: Deploy
 
 on:
-  push:
-    paths:
-      - '**.js'
-      - '**.json'
-      - '**.yml'
+  pull_request:
     branches:
       - stage
       - main
+    types: [opened, reopened, synchronize, edited]
 
 jobs:
   setup:
