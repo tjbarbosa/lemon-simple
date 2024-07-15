@@ -28,7 +28,7 @@ describe('ClientService', () => {
 
     expect(output).toEqual({
       eligible: false,
-      reason: EligibilityError.INELIGIBLE_CONSUMPTION_CLASS,
+      reasons: [EligibilityError.INELIGIBLE_CONSUMPTION_CLASS],
     });
   });
 
@@ -44,7 +44,7 @@ describe('ClientService', () => {
 
     expect(output).toEqual({
       eligible: false,
-      reason: EligibilityError.INELIGIBLE_TARIFF_MODALITY,
+      reasons: [EligibilityError.INELIGIBLE_TARIFF_MODALITY],
     });
   });
 
@@ -60,7 +60,7 @@ describe('ClientService', () => {
 
     expect(output).toEqual({
       eligible: false,
-      reason: EligibilityError.INSUFFICIENT_CONSUMPTION_HISTORY,
+      reasons: [EligibilityError.INSUFFICIENT_CONSUMPTION_HISTORY],
     });
   });
 
@@ -76,7 +76,7 @@ describe('ClientService', () => {
 
     expect(output).toEqual({
       eligible: false,
-      reason: EligibilityError.LOW_AVERAGE_CONSUMPTION,
+      reasons: [EligibilityError.LOW_AVERAGE_CONSUMPTION],
     });
   });
 
@@ -90,12 +90,11 @@ describe('ClientService', () => {
 
     const output: CheckEligibilityOutput = clientService.checkEligibility(input);
 
-    const averageConsumption =
-      input.consumptionHistory.slice(-12).reduce((accumulator, consumption) => accumulator + consumption, 0) / 12;
+    const annualCO2Savings = 5553.240000000001;
 
     expect(output).toEqual({
       eligible: true,
-      annualCO2Savings: averageConsumption * 12 * (84 / 1000),
+      annualCO2Savings,
     });
   });
 });
