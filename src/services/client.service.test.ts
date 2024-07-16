@@ -1,13 +1,13 @@
-import { CheckEligibilityInput, CheckEligibilityOutput } from '../dto/client.dto';
-import { EligibilityError } from '../middlewares/errorHandler';
+import {CheckEligibilityInput, CheckEligibilityOutput} from '../dto/client.dto';
+import {EligibilityError} from '../middlewares/errorHandler';
 import {
   ConnectionTypeEnum,
   InvalidConsumptionClassEnum,
   InvalidTariffModalityEnum,
   ValidConsumptionClassEnum,
-  ValidTariffModalityEnum
+  ValidTariffModalityEnum,
 } from '../types/client.type';
-import { ClientService } from './client-service';
+import {ClientService} from './client-service';
 
 describe('ClientService', () => {
   let clientService: ClientService;
@@ -21,7 +21,7 @@ describe('ClientService', () => {
       consumptionClass: InvalidConsumptionClassEnum.publicPower,
       tariffModality: ValidTariffModalityEnum.conventional,
       connectionType: ConnectionTypeEnum.singlePhase,
-      consumptionHistory: [100, 120, 150, 130, 110, 90, 140, 180, 160, 120, 100, 80],
+      consumptionHistory: [3878, 9760, 5976, 2797, 2481, 5731, 7538, 4392, 7859, 4160, 6941, 4597],
     };
 
     const output: CheckEligibilityOutput = clientService.checkEligibility(input);
@@ -37,7 +37,7 @@ describe('ClientService', () => {
       consumptionClass: ValidConsumptionClassEnum.residential,
       tariffModality: InvalidTariffModalityEnum.blue,
       connectionType: ConnectionTypeEnum.singlePhase,
-      consumptionHistory: [100, 120, 150, 130, 110, 90, 140, 180, 160, 120, 100, 80],
+      consumptionHistory: [3878, 9760, 5976, 2797, 2481, 5731, 7538, 4392, 7859, 4160, 6941, 4597],
     };
 
     const output: CheckEligibilityOutput = clientService.checkEligibility(input);
@@ -53,14 +53,14 @@ describe('ClientService', () => {
       consumptionClass: ValidConsumptionClassEnum.residential,
       tariffModality: ValidTariffModalityEnum.conventional,
       connectionType: ConnectionTypeEnum.singlePhase,
-      consumptionHistory: [100, 120, 150, 130, 110, 160, 120, 100, 80],
+      consumptionHistory: [10, 12, 15, 13, 11, 9, 14, 18, 16, 12, 10],
     };
 
     const output: CheckEligibilityOutput = clientService.checkEligibility(input);
 
     expect(output).toEqual({
       eligible: false,
-      reasons: [EligibilityError.INSUFFICIENT_CONSUMPTION_HISTORY],
+      reasons: [EligibilityError.INSUFFICIENT_CONSUMPTION_HISTORY, EligibilityError.LOW_AVERAGE_CONSUMPTION],
     });
   });
 
