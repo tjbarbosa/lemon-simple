@@ -1,60 +1,36 @@
-import {
-  CheckEligibilityInput,
-  CheckEligibilityOutput
-} from "../dto/client.dto";
-import { EligibilityError } from "../middlewares/errorHandler";
+import {CheckEligibilityInput, CheckEligibilityOutput} from '../dto/client.dto';
+import {EligibilityError} from '../middlewares/errorHandler';
 import {
   ConnectionTypeEnum,
   MinConsumptionByConnectionTypeEnum,
   ValidConsumptionClassEnum,
   ValidTariffModalityEnum,
-} from "../types/client.type";
+} from '../types/client.type';
 
 export class ClientService {
-  checkEligibility(
-    checkEligibilityInput: CheckEligibilityInput
-  ): CheckEligibilityOutput {
-    const {
-      consumptionClass,
-      tariffModality,
-      connectionType,
-      consumptionHistory,
-    } = checkEligibilityInput;
+  checkEligibility(checkEligibilityInput: CheckEligibilityInput): CheckEligibilityOutput {
+    const {consumptionClass, tariffModality, connectionType, consumptionHistory} = checkEligibilityInput;
 
-    const validConsumptionClass: string[] = Object.values(
-      ValidConsumptionClassEnum
-    );
+    const reasons = [];
+
+    const validConsumptionClass: string[] = Object.values(ValidConsumptionClassEnum);
     if (!validConsumptionClass.includes(consumptionClass.toLowerCase())) {
-      EligibilityError;
-      return {
-        eligible: false,
-        reason: EligibilityError.INELIGIBLE_CONSUMPTION_CLASS,
-      };
+      reasons.push(EligibilityError.INELIGIBLE_CONSUMPTION_CLASS.toString());
     }
 
-    const validTariffModality: string[] = Object.values(
-      ValidTariffModalityEnum
-    );
+    const validTariffModality: string[] = Object.values(ValidTariffModalityEnum);
     if (!validTariffModality.includes(tariffModality.toLowerCase())) {
-      return {
-        eligible: false,
-        reason: EligibilityError.INELIGIBLE_TARIFF_MODALITY,
-      };
+      reasons.push(EligibilityError.INELIGIBLE_TARIFF_MODALITY.toString());
     }
 
     const baseNumberOfMonths = 12;
 
     if (consumptionHistory?.length < baseNumberOfMonths) {
-      return {
-        eligible: false,
-        reason: EligibilityError.INSUFFICIENT_CONSUMPTION_HISTORY,
-      };
+      reasons.push(EligibilityError.INSUFFICIENT_CONSUMPTION_HISTORY.toString());
     }
 
     const averageConsumption =
-      consumptionHistory
-        .slice(-baseNumberOfMonths)
-        .reduce((accumulator, consumption) => accumulator + consumption, 0) /
+      consumptionHistory.slice(-baseNumberOfMonths).reduce((accumulator, consumption) => accumulator + consumption, 0) /
       baseNumberOfMonths;
 
     if (
@@ -65,22 +41,23 @@ export class ClientService {
       (connectionType.toLowerCase() === ConnectionTypeEnum.threePhase &&
         averageConsumption < MinConsumptionByConnectionTypeEnum.threePhase)
     ) {
+      reasons.push(EligibilityError.LOW_AVERAGE_CONSUMPTION.toString());
+    }
+
+    if (reasons?.length) {
       return {
         eligible: false,
-        reason: EligibilityError.LOW_AVERAGE_CONSUMPTION,
+        reasons,
       };
     }
 
     const kWhGenerationReferenceBrazil = 1000;
     const averageCO2KgEmissionForKWhReferenceInBrazil = 84;
 
-    const annualEconomyProjection =
-      averageCO2KgEmissionForKWhReferenceInBrazil /
-      kWhGenerationReferenceBrazil;
+    const annualEconomyProjection = averageCO2KgEmissionForKWhReferenceInBrazil / kWhGenerationReferenceBrazil;
 
-    const annualCO2Savings =
-      averageConsumption * baseNumberOfMonths * annualEconomyProjection;
+    const annualCO2Savings = averageConsumption * baseNumberOfMonths * annualEconomyProjection;
 
-    return { eligible: true, annualCO2Savings };
+    return {eligible: true, annualCO2Savings};
   }
 }

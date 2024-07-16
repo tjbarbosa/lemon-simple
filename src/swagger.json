@@ -39,6 +39,52 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/Elegibilidade"
+              },
+              "examples": {
+                "Elegivel": {
+                  "value": {
+                    "numeroDoDocumento": "14041737706",
+                    "tipoDeConexao": "bifasico",
+                    "classeDeConsumo": "comercial",
+                    "modalidadeTarifaria": "convencional",
+                    "historicoDeConsumo": [
+                      3878,
+                      9760,
+                      5976,
+                      2797,
+                      2481,
+                      5731,
+                      7538,
+                      4392,
+                      7859,
+                      4160,
+                      6941,
+                      4597
+                    ]
+                  },
+                  "summary": "Cliente elegivel"
+                },
+                "Inelegivel": {
+                  "value": {
+                    "numeroDoDocumento": "14041737706",
+                    "tipoDeConexao": "bifasico",
+                    "classeDeConsumo": "rural",
+                    "modalidadeTarifaria": "verde",
+                    "historicoDeConsumo": [
+                      3878,
+                      9760,
+                      5976,
+                      2797,
+                      2481,
+                      5731,
+                      7538,
+                      4392,
+                      7859,
+                      4160
+                    ]
+                  },
+                  "summary": "Cliente inelegivel"
+                }
               }
             }
           },
@@ -51,15 +97,152 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ResultadoElegibilidade"
+                },
+                "examples": {
+                  "Cliente elegível": {
+                    "value": {
+                      "elegivel": true,
+                      "annualCO2Savings": "5553.2"
+                    }
+                  }
                 }
               }
             }
           },
           "400": {
-            "description": "Invalid input"
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Campos faltantes": {
+                    "value": {
+                      "numeroDoDocumento": "",
+                      "tipoDeConexao": "bifasico",
+                      "classeDeConsumo": "comercial",
+                      "historicoDeConsumo": [
+                        3878,
+                        9760,
+                        5976
+                      ]
+                    },
+                    "summary": "Número documento e modalidade tarifaria faltantes"
+                  },
+                  "Campo TipoDeConexao inválido": {
+                    "value": {
+                      "numeroDoDocumento": "78324267050",
+                      "tipoDeConexao": "quadrifasico",
+                      "classeDeConsumo": "comercial",
+                      "modalidadeTarifaria": "convencional",
+                      "historicoDeConsumo": [
+                        3878,
+                        9760,
+                        5976
+                      ]
+                    },
+                    "summary": "Tipo de conexão inválido"
+                  },
+                  "O campo historicoDeConsumo não possui o número mínimo de itens": {
+                    "value": {
+                      "numeroDoDocumento": "78324267050",
+                      "tipoDeConexao": "bifasico",
+                      "classeDeConsumo": "comercial",
+                      "modalidadeTarifaria": "convencional",
+                      "historicoDeConsumo": [
+                        3878
+                      ]
+                    },
+                    "summary": "Histórico de consumo insuficiente"
+                  },
+                  "O campo historicoDeConsumo possui itens com valores inválidos": {
+                    "value": {
+                      "numeroDoDocumento": "78324267050",
+                      "tipoDeConexao": "bifasico",
+                      "classeDeConsumo": "comercial",
+                      "modalidadeTarifaria": "convencional",
+                      "historicoDeConsumo": [
+                        -1,
+                        10000
+                      ]
+                    },
+                    "summary": "Valores de histórico de consumo inválidos"
+                  }
+                }
+              }
+            }
           },
           "422": {
-            "description": "Validation exception"
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultadoInelegibilidade"
+                },
+                "examples": {
+                  "Campo classeDeConsumo não elegível": {
+                    "value": {
+                      "elegivel": false,
+                      "razoesDeInelegibilidade": [
+                        "Classe de consumo não elegível"
+                      ]
+                    },
+                    "summary": "Classe de consumo não elegível"
+                  },
+                  "Campo modalidadeTarifaria não elegível": {
+                    "value": {
+                      "elegivel": false,
+                      "razoesDeInelegibilidade": [
+                        "Modalidade tarifária não elegível"
+                      ]
+                    },
+                    "summary": "Modalidade tarifária não elegível"
+                  },
+                  "Campo historicoDeConsumo insuficiente": {
+                    "value": {
+                      "elegivel": false,
+                      "razoesDeInelegibilidade": [
+                        "Histórico de consumo insuficiente"
+                      ]
+                    },
+                    "summary": "Histórico de consumo insuficiente"
+                  },
+                  "Consumo médio abaixo do mínimo necessário": {
+                    "value": {
+                      "elegivel": false,
+                      "razoesDeInelegibilidade": [
+                        "Consumo médio abaixo do mínimo necessário"
+                      ]
+                    },
+                    "summary": "Consumo médio abaixo do mínimo necessário"
+                  },
+                  "Todas as exceções": {
+                    "value": {
+                      "elegivel": false,
+                      "razoesDeInelegibilidade": [
+                        "Classe de consumo não elegível",
+                        "Modalidade tarifária não elegível",
+                        "Histórico de consumo insuficiente",
+                        "Consumo médio abaixo do mínimo necessário"
+                      ]
+                    },
+                    "summary": "Todas as regras possíveis tratadas"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Erro Interno do Servidor": {
+                    "value": {
+                      "error": "Ocorreu um erro interno"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -70,11 +253,11 @@
       "Elegibilidade": {
         "type": "object",
         "properties": {
-          "numero_documento": {
+          "numeroDoDocumento": {
             "type": "string",
             "example": 78324267050
           },
-          "tipo_conexao": {
+          "tipoDeConexao": {
             "type": "string",
             "enum": [
               "monofasico",
@@ -83,7 +266,7 @@
             ],
             "example": "bifasico"
           },
-          "classe_consumo": {
+          "classeDeConsumo": {
             "type": "string",
             "enum": [
               "residencial",
@@ -94,7 +277,7 @@
             ],
             "example": "comercial"
           },
-          "modalidade_tarifaria": {
+          "modalidadeTarifaria": {
             "type": "string",
             "enum": [
               "azul",
@@ -104,14 +287,14 @@
             ],
             "example": "convencional"
           },
-          "historico_consumo": {
+          "historicoDeConsumo": {
             "type": "array",
             "items": {
               "type": "number"
             },
             "minItems": 3,
             "maxItems": 12,
-            "minimum": 1,
+            "minimum": 0,
             "maximum": 9999,
             "example": [
               3878,
@@ -122,55 +305,52 @@
         }
       },
       "ResultadoElegibilidade": {
-        "oneOf": [
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "elegivel": {
-                "type": "string",
-                "enum": [
-                  "true"
-                ]
-              },
-              "economia_anual_CO2": {
-                "type": "number",
-                "minimum": 0
-              }
-            },
-            "required": [
-              "elegivel",
-              "economia_anual_CO2"
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "elegivel": {
+            "type": "string",
+            "enum": [
+              "true"
             ]
           },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "elegivel": {
-                "type": "string",
-                "enum": [
-                  "false"
-                ]
-              },
-              "razoes_inelegibilidade": {
-                "type": "array",
-                "uniqueItems": true,
-                "items": {
-                  "type": "string",
-                  "enum": [
-                    "Classe de consumo não aceita",
-                    "Modalidade tarifária não aceita",
-                    "Consumo muito baixo para tipo de conexão"
-                  ]
-                }
-              }
-            },
-            "required": [
-              "elegivel",
-              "razoes_inelegibilidade"
-            ]
+          "economiaAnualDeCO2": {
+            "type": "number",
+            "minimum": 5555
           }
+        },
+        "required": [
+          "elegivel",
+          "economiaAnualDeCO2"
+        ]
+      },
+      "ResultadoInelegibilidade": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "elegivel": {
+            "type": "string",
+            "enum": [
+              "false"
+            ]
+          },
+          "razoesDeInelegibilidade": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "enum": [
+                "Classe de consumo não elegível",
+                "Modalidade tarifária não elegível",
+                "Histórico de consumo insuficiente",
+                "Consumo médio abaixo do mínimo necessário"
+              ]
+            }
+          }
+        },
+        "required": [
+          "elegivel",
+          "razoesDeInelegibilidade"
         ]
       }
     }

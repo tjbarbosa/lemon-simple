@@ -6,10 +6,10 @@ const clientService = new ClientService();
 
 export const checkEligibility = (req: Request, res: Response) => {
   const {
-    classe_consumo: consumptionClass,
-    modalidade_tarifaria: tariffModality,
-    tipo_conexao: connectionType,
-    historico_consumo: consumptionHistory,
+    classeDeConsumo: consumptionClass,
+    modalidadeTarifaria: tariffModality,
+    tipoDeConexao: connectionType,
+    historicoDeConsumo: consumptionHistory,
   } = req.body;
 
   const checkEligibilityInput = {
@@ -25,6 +25,6 @@ export const checkEligibility = (req: Request, res: Response) => {
   if (response.elegivel) {
     res.status(200).json(response);
   } else {
-    res.status(400).json(response);
+    res.status(422).json(response);
   }
 };

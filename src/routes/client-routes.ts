@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { validateInput } from '../../middlewares/validator';
-import { checkEligibility } from '../../controllers/client-controller';
+import { checkEligibility } from '../controllers/client-controller';
+import { validateInput } from '../middlewares/validator';
 
 const router = Router();
 

@@ -1,6 +1,6 @@
 import express from "express";
 import swaggerUi from "swagger-ui-express";
-import clienteRoutes from "./src/routes/client-routes";
+import clientRoutes from "./routes/client-routes";
 
 import * as swaggerDocument from './swagger.json';
 
@@ -9,6 +9,6 @@ app.use(express.json());
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-app.use("/clientes", clienteRoutes);
+app.use("/clientes", clientRoutes);
 
 export default app;

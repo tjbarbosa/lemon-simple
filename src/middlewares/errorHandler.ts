@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 
 export enum EligibilityError {
-  INTERNAL_SERVER_ERROR = "Ocorreu um erro interno.",
+  INTERNAL_SERVER_ERROR = "Ocorreu um erro interno",
   INELIGIBLE_CONSUMPTION_CLASS = "Classe de consumo não elegível",
   INELIGIBLE_TARIFF_MODALITY = "Modalidade tarifária não elegível",
   INSUFFICIENT_CONSUMPTION_HISTORY = "Histórico de consumo insuficiente",

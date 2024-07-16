@@ -8,7 +8,7 @@
     "start": "npm run build && node ./dist/server.js",
     "dev": "npx ts-node-dev src/server.ts",
     "test": "jest",
-    "test:e2e": "npx jest --config jest.e2e.config.js",
+    "test:cov": "jest --coverage",
     "prettier:write": "npx prettier --write"
   },
   "dependencies": {
